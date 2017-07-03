@@ -1,6 +1,6 @@
 import numpy as np
 import os
-
+import train_cnn
 
 def load_mnist():
     data_dir = '../dataset'
@@ -53,6 +53,11 @@ def main():
 
     print "\nDigit sample"
     print_digit(trainX[1], trainY[1])
+
+    train_cnn.train(trainX, trainY)
+    labels = train_cnn.test(testX)
+    accuracy = np.mean((labels == testY)) * 100.0
+    print "\nCNN Test accuracy: %lf%%" % accuracy
 
 
 if __name__ == '__main__':
