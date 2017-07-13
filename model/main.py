@@ -39,11 +39,12 @@ def load_mnist():
 def print_digit(digit_pixels, label='?'):
     for i in range(28):
         for j in range(28):
-            if digit_pixels[i, j] > 128:
-                print '#',
-            else:
-                print '.',
-        print ''
+            print digit_pixels[i,j]
+        #     if digit_pixels[i, j] > 128:
+        #         print '#',
+        #     else:
+        #         print '.',
+        # print ''
 
     print 'Label: ', label
 
@@ -53,7 +54,7 @@ def main():
     print "Shapes: ", trainX.shape, trainY.shape, testX.shape, testY.shape
 
     # print "\nDigit sample"
-    # print_digit(trainX[1], trainY[1])
+    print_digit(trainX[1], trainY[1])
 
     #train_cnn.train(trainX, trainY)
     labels = train_cnn.test(testX)
