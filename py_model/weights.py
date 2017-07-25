@@ -6,6 +6,7 @@ def extract(path_model):
 	#print len(model.layers)
 	print "the architecture\n"
 	j = 0
+	print model.summary()
 	summary = model.get_config()
 	for items in summary:
 		#print items['class_name']
