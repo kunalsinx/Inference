@@ -12,4 +12,3 @@ run ```python main.py``` which outputs
 contains train.cpp with same architecture as in ```py_model/train_cnn.py```   
 to train : ```g++ -I/path_to_tiny-dnn/ train.cpp -o main -std=c++14 -pthread```   
 Currently working on translation of weights. Code for it will be up soon
-
