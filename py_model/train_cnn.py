@@ -40,6 +40,6 @@ def train(trainX, trainY):
 
 
 def test(testX):
-
+    print "\nloading pre trained model..."
     test_mod = load_model('cnn.h5')
     return np.argmax(test_mod.predict(testX),1)

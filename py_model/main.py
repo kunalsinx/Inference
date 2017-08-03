@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import train_cnn
+#import weights
 
 def load_mnist():
     data_dir = '../dataset'
@@ -34,30 +35,34 @@ def load_mnist():
 
     return trX, trY, teX, teY
 
-
+#to check if the data loading is proper
 def print_digit(digit_pixels, label='?'):
     for i in range(28):
         for j in range(28):
-            if digit_pixels[i, j] > 128:
-                print '#',
-            else:
-                print '.',
-        print ''
+            print digit_pixels[i,j]
+        #     if digit_pixels[i, j] > 128:
+        #         print '#',
+        #     else:
+        #         print '.',
+        # print ''
 
     print 'Label: ', label
 
 
 def main():
     trainX, trainY, testX, testY = load_mnist()
-    print "Shapes: ", trainX.shape, trainY.shape, testX.shape, testY.shape
+    # print "Shapes: ", trainX.shape, trainY.shape, testX.shape, testY.shape
 
-    print "\nDigit sample"
-    print_digit(trainX[1], trainY[1])
+    # print "\nDigit sample"
+    #print_digit(trainX[1], trainY[1])
 
-    train_cnn.train(trainX, trainY)
+    #train_cnn.train(trainX, trainY)
     labels = train_cnn.test(testX)
     accuracy = np.mean((labels == testY)) * 100.0
     print "\nCNN Test accuracy: %lf%%" % accuracy
+
+    #weights.extract('../test_models/keras_model/case.h5')
+    # weights.extract('cnn.h5')
 
 
 if __name__ == '__main__':
