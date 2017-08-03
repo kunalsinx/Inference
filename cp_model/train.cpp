@@ -20,7 +20,7 @@ void construct_net(network<sequential>& cnn)
         << fc(1600, 256) << relu()                       
         << fc(256, 10) << softmax(); 
 	                      
-}
+}	
 
 void train_cnn(double learning_rate, const int n_train_epochs, const int n_minibatch, core::backend_t backend_type) 
 
@@ -75,7 +75,7 @@ void train_cnn(double learning_rate, const int n_train_epochs, const int n_minib
   std::cout << "end training." << std::endl;
 
   cnn.test(test_images, test_labels).print_detail(std::cout);
-  cnn.save("Naive-CNN-model");
+  cnn.save("model");
 }
 
 static core::backend_t parse_backend_name(const std::string &name) {
