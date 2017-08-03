@@ -71,8 +71,8 @@ def extract(path_model):
 			j = j+1
 			print" weight matrix shape for layer {}: {}".format(j , weight[0].shape)
 			print" bias shape for layer {}: {}".format(j , weight[1].shape)
-			np.save("../wght_translation/weight_"+layer[i]+"_"+str(j%2 + 1)+".npy",weight[0])
-			np.save("../wght_translation/bias_"+layer[i]+"_"+str(j%2 + 1)+".npy",weight[1])
+			np.save("../weights/weight_"+layer[i]+"_"+str(j%2 + 1)+".npy",weight[0])
+			np.save("../weights/bias_"+layer[i]+"_"+str(j%2 + 1)+".npy",weight[1])
 
 		except Exception, e:
 			j = j - 1
@@ -86,14 +86,14 @@ def code_gen():
 	tiny_layers = {"Conv2D":"conv", "Dense":"fc", "MaxPooling2D":"max_pool", }
 	tiny_activations = {"relu":"relu", "softmax":"softmax"}
 
-	file = open("goal.cpp","w")
+	file = open("../cp_model/target.cpp","w")
 
 	file.close()
 
 
 
 def main():
-	layer_info, input_shape = extract('cnn.h5')
+	layer_info, input_shape = extract('../test_models/saved_models/cnn.h5')
 	code_gen()
 
 if __name__ == '__main__':
