@@ -50,8 +50,10 @@ def extract(path_model):
 			layer.append(items['class_name'])
 			print "layer",j," = MaxPooling2D"
 			print "pool size = ", items['config']['pool_size'], "\n"
+			print "strides = ", items['config']['strides']
 			features = {}
-			features["pool_size"] = items['config']['pool_size'] 
+			features["pool_size"] = items['config']['pool_size']
+			features["strides"] = items['config']['strides'] 
 			layer_info.append({items['class_name']: features})
 
 		if(items['class_name'] == 'Flatten'):
@@ -96,12 +98,14 @@ def code_gen(layer_info, input_shape):
 	file.writelines("using namespace tiny_dnn::activation;\n")
 	file.writelines("using namespace tiny_dnn::layers;\n")
 	file.writelines("\nint main()\n{\n")
-	file.writelines("\tnetwork<sequential> cnn;\n")
-	file.writelines("\tcnn \n")
-	print layer_info, input_shape
+	file.writelines("\tnetwork<sequential> net;\n")
+	file.writelines("\tnet ")
+	#print layer_info, input_shape
 
 	for i in xrange(len(input_shape)):
 		name, dim = input_shape[i]
+		# layer = layer_info[i]
+		# print layer,"\t",name,"\n"
 		
 		if(name == "Conv2D" ):
 			_, h, w, in_d = dim
@@ -112,20 +116,44 @@ def code_gen(layer_info, input_shape):
 			k_w, k_h = layer['Conv2D']['kernel_size']
 			out_d = layer['Conv2D']['number of filters']
 
-			file.writelines("\t\t<< conv("+str(w)+", "+str(h)+", "+str(k_w)+", "+str(k_h)+", "+str(in_d)+", "+str(out_d)+")")
-			file.writelines(" << " + activation + "()\n")
+			file.writelines("\n\t\t<< conv("+str(w)+", "+str(h)+", "+str(k_w)+", "+str(k_h)+", "+str(in_d)+", "+str(out_d)+")")
+			file.writelines(" << " + activation + "()")
 
-		if(name == "MaxPooling2D"):
+		elif(name == "MaxPooling2D"):
+			_, h, w, in_d = dim
+			layer = layer_info[i]
+			s_w, s_h = layer['MaxPooling2D']['strides']
+			p_h, p_w = layer['MaxPooling2D']['pool_size']
 
+			file.writelines("\n\t\t<< max_pool("+str(w)+", "+str(h)+", "+str(in_d)+", "+str(p_w)+", "+str(p_h)+", "+str(s_w)+", "+str(s_h)+")")
 
+		elif(name == "Dropout"):
+			continue
 
+		elif(name == "Flatten"):
+			continue
+
+		elif(name == "Dense"):
+			#print len(dim)
+			layer = layer_info[i]
+			activation = layer['Dense']['activation']
+
+			if (len(dim) == 2):
+				_, vec = dim
+				#print layer
+				file.writelines("\n\t\t<< fc("+str(vec)+", "+str(layer["Dense"]["units"])+")")
+				file.writelines(" << " + activation + "()")
 
 
 		else:
+			#print name
 			print "Error: architecture contains layer not supported by code generation yet..."
 			break;
 		
-		
+
+	file.writelines(";\n")
+	file.writelines("\tnet.save(\"model\");\n")
+	file.writelines("}")	
 		
 
 	file.close()

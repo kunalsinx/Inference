@@ -17,5 +17,5 @@ int main()
         << fc(1600, 256) << relu()                       
         << fc(256, 10) << softmax();
     // end ..So only this part of the code needs to be generated
-  cnn.save("model");
+    cnn.save("model");
 }

@@ -7,6 +7,13 @@ using namespace tiny_dnn::layers;
 
 int main()
 {
-	network<sequential> cnn;
-	cnn 
+	network<sequential> net;
+	net 
 		<< conv(28, 28, 3, 3, 1, 32) << relu()
+		<< max_pool(26, 26, 32, 2, 2, 2, 2)
+		<< conv(13, 13, 3, 3, 32, 64) << relu()
+		<< max_pool(11, 11, 64, 2, 2, 2, 2)
+		<< fc(1600, 256) << relu()
+		<< fc(256, 10) << softmax();
+	net.save("model");
+}
