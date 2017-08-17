@@ -35,7 +35,7 @@ int main()
 	<< fc_10
 	<< fc_11;
 	network<graph> net;
-	construct_graph(net, { &input_layer_1}, { &fc_11 } );
+	construct_graph(net, { &input_layer_1, &input_layer_7}, { &fc_11 } );
 	std::ofstream ofs("graph_net_example.txt");
 	graph_visualizer viz(net, "graph");
 	viz.generate(ofs);
