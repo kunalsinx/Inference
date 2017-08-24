@@ -207,9 +207,10 @@ void LoadArrayFromNumpy(
     std::stringstream ss;
     ss << header[descr_loc + 2];
     ss >> word_size;
+    //std::cout << "word_size" << word_size << sizeof(float)<<sizeof(double)<< header[descr_loc + 1]<< std::endl;
     if(data_type != detail::DescriptorDataType<Scalar>::value ||
        word_size != sizeof(Scalar)) {
-        //std::cout<<data_type<<"\n"<<detail::DescriptorDataType<Scalar>::value<<std::endl;
+        std::cout<<data_type<<"\n"<<detail::DescriptorDataType<Scalar>::value<<std::endl;
         throw std::runtime_error(
             "formatting error: the type of .npy file is not equal to that of std::vector<T>");
     }

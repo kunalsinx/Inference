@@ -39,12 +39,11 @@ def load_mnist():
 def print_digit(digit_pixels, label='?'):
     for i in range(28):
         for j in range(28):
-            print digit_pixels[i,j]
-        #     if digit_pixels[i, j] > 128:
-        #         print '#',
-        #     else:
-        #         print '.',
-        # print ''
+            if digit_pixels[i, j] > 128:
+                print '#',
+            else:
+                print '.',
+        print ''
 
     print 'Label: ', label
 
@@ -55,11 +54,13 @@ def main():
 
     # print "\nDigit sample"
     #print_digit(trainX[1], trainY[1])
+    for i in xrange(9995,10000):
+        print testY[i]
 
-    #train_cnn.train(trainX, trainY)
-    labels = train_cnn.test(testX)
-    accuracy = np.mean((labels == testY)) * 100.0
-    print "\nCNN Test accuracy: %lf%%" % accuracy
+    train_cnn.train(trainX, trainY)
+    # labels = train_cnn.test(testX)
+    # accuracy = np.mean((labels == testY)) * 100.0
+    # print "\nCNN Test accuracy: %lf%%" % accuracy
 
     #weights.extract('../test_models/keras_model/case.h5')
     # weights.extract('cnn.h5')

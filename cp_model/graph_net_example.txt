@@ -1,0 +1,78 @@
+digraph "graph" {
+  node [ shape=record ];
+  "input0" [
+    label= "input|{{in|<in0>36x1x1(data)}|{out|<out0>36x1x1(data)}}"
+  ];
+  "input0":out0 -> "concat0":in1;
+  "concat0" [
+    label= "concat|{{in|<in0>1x1x256(data)|<in1>1x1x36(data)}|{out|<out0>1x1x292(data)}}"
+  ];
+  "concat0":out0 -> "fully-connected0":in0;
+  "max-pool0" [
+    label= "max-pool|{{in|<in0>4x4x64(data)}|{out|<out0>2x2x64(data)}}"
+  ];
+  "max-pool0":out0 -> "concat0":in0;
+  "fully-connected0" [
+    label= "fully-connected|{{in|<in0>292x1x1(data)|<in1>292x128x1(weight)|<in2>128x1x1(bias)}|{out|<out0>128x1x1(data)}}"
+  ];
+  "fully-connected0":out0 -> "relu-activation1":in0;
+  "relu-activation0" [
+    label= "relu-activation|{{in|<in0>4x4x64(data)}|{out|<out0>4x4x64(data)}}"
+  ];
+  "relu-activation0":out0 -> "max-pool0":in0;
+  "relu-activation1" [
+    label= "relu-activation|{{in|<in0>128x1x1(data)}|{out|<out0>128x1x1(data)}}"
+  ];
+  "relu-activation1":out0 -> "fully-connected1":in0;
+  "conv0" [
+    label= "conv|{{in|<in0>4x4x64(data)|<in1>3x3x4096(weight)|<in2>1x1x64(bias)}|{out|<out0>4x4x64(data)}}"
+  ];
+  "conv0":out0 -> "relu-activation0":in0;
+  "fully-connected1" [
+    label= "fully-connected|{{in|<in0>128x1x1(data)|<in1>128x64x1(weight)|<in2>64x1x1(bias)}|{out|<out0>64x1x1(data)}}"
+  ];
+  "fully-connected1":out0 -> "relu-activation3":in0;
+  "relu-activation2" [
+    label= "relu-activation|{{in|<in0>4x4x64(data)}|{out|<out0>4x4x64(data)}}"
+  ];
+  "relu-activation2":out0 -> "conv0":in0;
+  "relu-activation3" [
+    label= "relu-activation|{{in|<in0>64x1x1(data)}|{out|<out0>64x1x1(data)}}"
+  ];
+  "relu-activation3":out0 -> "fully-connected2":in0;
+  "conv1" [
+    label= "conv|{{in|<in0>4x4x32(data)|<in1>3x3x2048(weight)|<in2>1x1x64(bias)}|{out|<out0>4x4x64(data)}}"
+  ];
+  "conv1":out0 -> "relu-activation2":in0;
+  "fully-connected2" [
+    label= "fully-connected|{{in|<in0>64x1x1(data)|<in1>64x2x1(weight)|<in2>2x1x1(bias)}|{out|<out0>2x1x1(data)}}"
+  ];
+  "fully-connected2":out0 -> "softmax-activation0":in0;
+  "max-pool1" [
+    label= "max-pool|{{in|<in0>8x8x32(data)}|{out|<out0>4x4x32(data)}}"
+  ];
+  "max-pool1":out0 -> "conv1":in0;
+  "softmax-activation0" [
+    label= "softmax-activation|{{in|<in0>2x1x1(data)}|{out|<out0>2x1x1(data)}}"
+  ];
+  "relu-activation4" [
+    label= "relu-activation|{{in|<in0>8x8x32(data)}|{out|<out0>8x8x32(data)}}"
+  ];
+  "relu-activation4":out0 -> "max-pool1":in0;
+  "conv2" [
+    label= "conv|{{in|<in0>8x8x32(data)|<in1>3x3x1024(weight)|<in2>1x1x32(bias)}|{out|<out0>8x8x32(data)}}"
+  ];
+  "conv2":out0 -> "relu-activation4":in0;
+  "relu-activation5" [
+    label= "relu-activation|{{in|<in0>8x8x32(data)}|{out|<out0>8x8x32(data)}}"
+  ];
+  "relu-activation5":out0 -> "conv2":in0;
+  "conv3" [
+    label= "conv|{{in|<in0>8x8x8(data)|<in1>3x3x256(weight)|<in2>1x1x32(bias)}|{out|<out0>8x8x32(data)}}"
+  ];
+  "conv3":out0 -> "relu-activation5":in0;
+  "input1" [
+    label= "input|{{in|<in0>8x8x8(data)}|{out|<out0>8x8x8(data)}}"
+  ];
+  "input1":out0 -> "conv3":in0;
+}
