@@ -2,6 +2,7 @@ from keras.models import load_model
 import numpy as np
 import os
 import h5py
+import sys
 
 def extract(path_model):
 	try:
@@ -140,7 +141,7 @@ def code_gen(layer_info, input_shape, count_inputs):
 	
 	if(count_inputs==0):
 		tiny_layers = {"Conv2D":"conv", "Dense":"fc", "MaxPooling2D":"max_pool", "AveragePooling2D":"ave_pool" }
-		tiny_activations = {"relu":"relu", "softmax":"softmax"}
+		tiny_activations = {"relu":"relu", "sigmoid":"sigmoid","softmax":"softmax"}
 		file = open("../cp_model/target.cpp","w")
 		file.writelines("#include <iostream>\n")
 		file.writelines("#include \"tiny_dnn/tiny_dnn.h\"\n")
@@ -229,7 +230,7 @@ def code_gen(layer_info, input_shape, count_inputs):
 		tiny_layers = {"InputLayer": "input","Conv2D":"conv", "Dense":"fc",
 					   "MaxPooling2D":"max_pool", "AveragePooling2D":"ave_pool",
 					   "Concatenate":"concat", "BatchNormalization":"batch_normalization_layer" }
-		tiny_activations = {"relu":"relu", "softmax":"softmax"}
+		tiny_activations = {"relu":"relu", "sigmoid":"sigmoid", "softmax":"softmax"}
 		network = []
 		concat_index = 0
 		second_input_index = 0
@@ -401,12 +402,14 @@ def code_gen(layer_info, input_shape, count_inputs):
 
 
 
-def main():
+def main(argv):
+	if len(argv)==2:
 	
-	layer_info, input_shape, count_inputs = extract('../test_models/saved_models/net_and_weights.h5')
-	code_gen(layer_info,input_shape, count_inputs)
+		layer_info, input_shape, count_inputs = extract("../test_models/saved_models/"+argv[1])
+		code_gen(layer_info,input_shape, count_inputs)
 	# extract('../test_models/keras_model/net_and_weights.h5')
-
+	else:
+		print "Please give input argument properly...."
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
