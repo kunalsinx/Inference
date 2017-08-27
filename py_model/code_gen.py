@@ -1,6 +1,6 @@
 from keras.models import load_model
 import numpy as np
-import os
+import os, errno
 import h5py
 import sys
 
@@ -9,6 +9,7 @@ def extract(path_model):
 		model = load_model(path_model)
 	except Exception, e:
 		print "Error loading weight file"
+		return
 
 	print "\nthe architecture........\n"
 	print model.summary()
@@ -133,6 +134,10 @@ def extract(path_model):
 			j = j - 1
 			pass
 	model.save_weights('../weights/my_model_weights.h5')
+
+	file = open('../weights/input_count.txt', 'w+')
+	file.writelines(str(count_inputs))
+	file.close()
 	
 	return  layer_info, input_shape, count_inputs
 
@@ -160,7 +165,6 @@ def code_gen(layer_info, input_shape, count_inputs):
 			
 			if(name == "Conv2D" ):
 				_, h, w, in_d = dim
-
 				layer = layer_info[i]
 				# print layer
 				s_w, s_h = layer['Conv2D']['strides']
@@ -205,15 +209,15 @@ def code_gen(layer_info, input_shape, count_inputs):
 				activation = layer['Dense']['activation']
 
 				if (len(dim) == 2):
+
 					_, vec = dim
 					#print layer
 					file.writelines("\n\t\t<< "+ tiny_layers[name] 
 									+"("+str(vec)+", "+str(layer["Dense"]["units"])+")")
 					file.writelines(" << " + tiny_activations[activation] + "()")
 				else :
-					print "Only vector input allowed to Dense layers..."
+					print " input to dense should be a vec ..."
 					break
-
 			else:
 				#print name
 				print "Error: architecture contains layer not supported by code generation yet..."
@@ -225,7 +229,7 @@ def code_gen(layer_info, input_shape, count_inputs):
 		file.writelines("}")	
 		file.close()
 
-	elif(count_inputs == 2):
+	elif(count_inputs == 2 or count_inputs == 1):
 		
 		tiny_layers = {"InputLayer": "input","Conv2D":"conv", "Dense":"fc",
 					   "MaxPooling2D":"max_pool", "AveragePooling2D":"ave_pool",
@@ -353,7 +357,7 @@ def code_gen(layer_info, input_shape, count_inputs):
 					
 
 				else :
-					print "Only vectorized input allowed to Dense layers..."
+					print " input to dense should be a vec ..."
 					break
 
 			else:
@@ -403,13 +407,23 @@ def code_gen(layer_info, input_shape, count_inputs):
 
 
 def main(argv):
+	
+	if not os.path.exists("../weights/"):
+		os.makedirs("../weights/")
+
+	if not os.path.exists("../txt_weights/"):
+		os.makedirs("../txt_weights/")
+
 	if len(argv)==2:
 	
-		layer_info, input_shape, count_inputs = extract("../test_models/saved_models/"+argv[1])
+		layer_info, input_shape, count_inputs = extract(argv[1])
 		code_gen(layer_info,input_shape, count_inputs)
 	# extract('../test_models/keras_model/net_and_weights.h5')
 	else:
 		print "Please give input argument properly...."
+		return
+
+	
 
 if __name__ == '__main__':
     main(sys.argv)

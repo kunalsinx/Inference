@@ -67,7 +67,7 @@ int main()
 	
 	//std::cout << layers[0] << std::endl;
 	std::cout << "Coverting Numpy arrays into Vectors........";
-	std::cout << keras_layers.size() << std::endl;
+	//std::cout << keras_layers.size() << std::endl;
 	for ( i=0; i<keras_layers.size(); i++ )
 	{
 		std::string file="../txt_weights/weight_";
@@ -80,11 +80,14 @@ int main()
 		}
 		catch (std::exception& e)
 		{
+			std::cout << "unknown txt file detected...." << std::endl;
 			continue;
 		}
 		
 		weight.push_back(data);
 		std::cout << file << std::endl;
+		std::cout << "data size : "<< data.size() << std::endl;	
+		data.clear();
 
 		file ="../txt_weights/bias_";
 		file.append(keras_layers[i]);
@@ -99,9 +102,8 @@ int main()
 			continue;
 		}
 		bias.push_back(data);
-		// std::cout << data.size() << std::endl;
-
-	
+		std::cout << "data size : "<< data.size() << std::endl;
+		data.clear();
 	}
 
 	
@@ -109,28 +111,77 @@ int main()
 	
 	//std::cout << "Setting weights and biases...." << std::endl;
 	std::cout << " Size of weight vector : "<< weight.size() << std::endl << "Size of bias vector : " << bias.size() << std::endl;
-	network<graph> cnn;
-    cnn.load("../cp_model/model");
-	std::vector<vec_t*> weights;
 
-	std::cout << "Printing the architecture ....\n";
+	std::string file="../weights/input_count.txt";
 
-    for ( i=0; i<cnn.depth();i++)
-    {	
-    	
-		std::cout << "layer type:" << cnn[i]->layer_type() << "\n";
-		std::cout << "input:" << cnn[i]->in_data_size() << "(" << cnn[i]->in_data_shape() << ")\n";
-		std::cout << "output:" << cnn[i]->out_data_size() << "(" << cnn[i]->out_data_shape() << ")\n";
-		std::cout << "layer type:" << cnn[i]->layer_type() << "\n";
+	try
+	{
+		txt2vec(file, data);
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "Error in opening input_count.txt" << std::endl;
+		return 1;
+	}
 
-		weights = cnn[i]->weights();
-		if (weights.size()==0) continue;
-    	else 
-    	{
-			std::cout << "weight dimension(after vectorizing):" << weights[0]->size() << std::endl;
-			std::cout << "bias dimension(after vectorizing)" << weights[1]->size() << std::endl;
-    	}
+	//std::cout << data[0] << std::endl;
 
-    }
+	if(data[0]>=1)
+	{
+		network<graph> cnn;
+
+		cnn.load("../cp_model/model");
+		std::vector<vec_t*> weights;
+
+		std::cout << "Printing the architecture ....\n";
+
+	    for ( i=0; i<cnn.depth();i++)
+	    {	
+	    	
+			std::cout << "layer type:" << cnn[i]->layer_type() << "\n";
+			std::cout << "input:" << cnn[i]->in_data_size() << "(" << cnn[i]->in_data_shape() << ")\n";
+			std::cout << "output:" << cnn[i]->out_data_size() << "(" << cnn[i]->out_data_shape() << ")\n";
+			std::cout << "layer type:" << cnn[i]->layer_type() << "\n";
+
+			weights = cnn[i]->weights();
+			if (weights.size()==0) continue;
+	    	else 
+	    	{
+				std::cout << "weight dimension(after vectorizing):" << weights[0]->size() << std::endl;
+				std::cout << "bias dimension(after vectorizing)" << weights[1]->size() << std::endl;
+	    	}
+
+	    }
+	}
+	
+	else
+	{
+		network<sequential> cnn;
+
+		cnn.load("../cp_model/model");
+		std::vector<vec_t*> weights;
+
+		std::cout << "Printing the architecture ....\n";
+
+	    for ( i=0; i<cnn.depth();i++)
+	    {	
+	    	
+			std::cout << "layer type:" << cnn[i]->layer_type() << "\n";
+			std::cout << "input:" << cnn[i]->in_data_size() << "(" << cnn[i]->in_data_shape() << ")\n";
+			std::cout << "output:" << cnn[i]->out_data_size() << "(" << cnn[i]->out_data_shape() << ")\n";
+			std::cout << "layer type:" << cnn[i]->layer_type() << "\n";
+
+			weights = cnn[i]->weights();
+			if (weights.size()==0) continue;
+	    	else 
+	    	{
+				std::cout << "weight dimension(after vectorizing):" << weights[0]->size() << std::endl;
+				std::cout << "bias dimension(after vectorizing)" << weights[1]->size() << std::endl;
+	    	}
+
+	    }
+
+	}
+	
 
 }
