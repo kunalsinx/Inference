@@ -20,8 +20,8 @@ def main():
 	x_train, y_train = XOR_dataset()
 	np.save("table.npy", x_train)
 	np.save("out.npy", y_train)
-	train.train(x_train, y_train)
-	#train.load(x_train)
+	#train.train(x_train, y_train)
+	train.load(x_train)
 
 if __name__ == '__main__':
 	main()

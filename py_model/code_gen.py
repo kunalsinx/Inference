@@ -4,6 +4,22 @@ import os, errno
 import h5py
 import sys
 
+'''
+extract() function is for retrieving the type of the layers 
+present in the DNN and their order and important parameters about each layer.
+Like for convolution layer - number of filters, kernel size, padding, strides 
+and activation function.
+
+layer_info is a list of dictonaries in which all the described above is stored. 
+Names of the layers corresponds to the keys.
+
+Name of the weight files are also stored in layers_with_weights.txt so that it 
+can be used to read the weight files in order while setting the weights into the 
+layer before doing Inference in C++. Hence name of the weight files is made of 
+name of the layer and its position in the architecture.  
+
+'''
+
 def extract(path_model):
 	try:
 		model = load_model(path_model)
@@ -140,6 +156,21 @@ def extract(path_model):
 	file.close()
 	
 	return  layer_info, input_shape, count_inputs
+
+'''
+The way code generator writes the C++ file i.e target.cpp in cp_model folder
+is basically how a DNN either sequential or multi-input is defined in tiny-dnn.
+By defining I mean like for keras we make a model class of suppose sequential
+and then we add layers one after the another with parameters. 
+So for writing a sequential network, the way I write(generate) the C++ lines, it can be looked at /cp_model/train_sequential.cpp
+where I define a sequential network.  Similarly for graph one - /cp_model/train_graph.cpp
+
+An important note - Keras has a function called flatten() which tiny-dnn doesn't. But the way tiny-dnn 
+passes the output of the previous layer into the next layer is the output is vectorized first and then 
+what the input shape the next layer expects, the output is transformed into that shape. So the same approach 
+was used to deal with flatten().   
+'''
+
 
 
 def code_gen(layer_info, input_shape, count_inputs):
