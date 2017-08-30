@@ -13,8 +13,7 @@ So the project can be divided in 4 parts
   * `code_gen.py` - extracts the architecture and important information related to each layers in the network and then produces the equivalent network in C++ using the framework of `tiny-dnn`. Weights and biases per layer are stored in the `weights` folder. This script prints - the architecture, layer-wise details (like for a convolution layer it prints the number of filters, strides, kernel size, padding and the activation function used), weight matrix shape for each layer and name of the corresponding layers that is used to define the keras model in C++ non-sequential networks.   
   * `translate.py` - weights stored in the folder `weights` are in `.npy` format. This scripts converts `.npy` file to `.txt` file. The generated files are stored in `txt_weights` folder  
   * `Doublets` - Contains files to build and train the DNN on doublets dataset. On running `main.py`, training will be done and the trained model will be saved in `test_models/saved/models/`.
-  * `XOR` - There are two files `main.py` and `train.py`
-  which can be used to train a DNN to learn XOR representation. You can build your DNN model and save it and use it do the Inference
+  * `XOR` - There are two files `main.py` and `train.py`which can be used to train a DNN to learn XOR representation. You can build your DNN model and save it and use it do the Inference
   * `MNIST` - Currently it contains a CNN model for learning digit classification for MNIST dataset. But one can build their own model. One can edit `main.py` and `train.py` to build their own DNN using keras and train it. Using the code generator, equivalent DNN network can be made in C++.    
 * `cp_model` - contains 
   * `target.cpp` - this is the file which is produced after executing `code_gen.py`. The equivalent architecture is defined and saved as binary file named `model` after you compile and run this file.
@@ -37,6 +36,7 @@ So the project can be divided in 4 parts
 
 After this code is used for the first time, `weights` and `txt_weights` folders are made. When re-running the code with a different keras model, please ensure that both these folders are empty( it will work even if you dont delete it but still)  
 
+
 ### Dependencies 
 Nothing. All you need is g++ version that supports C++14 and python2
 
@@ -44,7 +44,7 @@ Nothing. All you need is g++ version that supports C++14 and python2
 This is a presentation where I show steps and the outputs of the step https://docs.google.com/presentation/d/1QDXf2t0ysrREG_owA45hQVZtsDVk6iOS8XQIlSMEsoQ/edit?usp=sharing
 
 ### Future Work
-I am able to set weights and biases into Convolution layer and Dense layer. I have tested this module on doublet dataset and the results were correct. I need to do some finishing work
+I am able to set weights and biases into Convolution layer and Dense layer. I have tested this module on doublet dataset and the results were correct. I need to do some finishing work.
  Future works -  
 * Making it compatible for python 3
 * Improving exception handling
