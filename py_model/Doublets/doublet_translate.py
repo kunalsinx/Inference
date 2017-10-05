@@ -4,9 +4,9 @@ import os
 def npy2txt(npyfile):
 
 	print npyfile
-	x = np.load("../../dataset/doublets/"+npyfile)
+	x = np.load("../../dataset/doublets/npy/"+npyfile)
 	print x.shape
-	txtfile = open("../../dataset/doublets/"+npyfile[:-4]+".txt", 'w+')
+	txtfile = open("../../dataset/doublets/txt/"+npyfile[:-4]+".txt", 'w+')
 	
 	if len(x.shape) == 4:
 		h, w, d, f = x.shape
@@ -52,6 +52,9 @@ def npy2txt(npyfile):
 
 
 def main():
+
+	if not os.path.exists("../../dataset/doublets/txt/"):
+		os.makedirs("../../dataset/doublets/txt/")
 	
 	npy2txt("hit_shape.npy")
 	npy2txt("hit_info.npy")
