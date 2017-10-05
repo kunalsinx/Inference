@@ -206,6 +206,9 @@ def code_gen(layer_info, input_shape, count_inputs):
 
 				file.writelines("\n\t\t<< "+ tiny_layers[name]+"("+str(w)+", "+str(h)+", "+str(k_w)+", "+str(k_h)
 					                       +", "+str(in_d)+", "+str(out_d)+", padding::"+padding+")")
+				
+				if(activation=="linear"):
+					continue
 				file.writelines(" << " + tiny_activations[activation] + "()")
 
 			elif(name == "MaxPooling2D"):
@@ -239,12 +242,15 @@ def code_gen(layer_info, input_shape, count_inputs):
 				layer = layer_info[i]
 				activation = layer['Dense']['activation']
 
+				if(activation=="linear"):
+					continue
 				if (len(dim) == 2):
 
 					_, vec = dim
 					#print layer
 					file.writelines("\n\t\t<< "+ tiny_layers[name] 
 									+"("+str(vec)+", "+str(layer["Dense"]["units"])+")")
+
 					file.writelines(" << " + tiny_activations[activation] + "()")
 				else :
 					print " input to dense should be a vec ..."
@@ -303,6 +309,9 @@ def code_gen(layer_info, input_shape, count_inputs):
 					             +"("+str(w)+", "+str(h)+", "+str(k_w)+", "+str(k_h)+", "
 					             +str(in_d)+", "+str(out_d)+", padding::"+padding+");")
 				network.append(tiny_layers[name]+"_"+str(j))
+
+				if(activation=="linear"):
+					continue
 
 				j += 1
 				file.writelines("\n\tauto "+activation+"_"+str(j)
@@ -381,6 +390,9 @@ def code_gen(layer_info, input_shape, count_inputs):
 									+">("+str(vec)+", "+str(layer["Dense"]["units"])+");")
 					network.append(tiny_layers[name]+"_"+str(j))
 
+					if(activation=="linear"):
+						continue
+						
 					j += 1
 					file.writelines("\n\tauto "+activation+"_"+str(j)
 					             +" = std::make_shared<"+activation+">();")
